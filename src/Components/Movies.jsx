@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import axios from 'axios';
 import MovieCard from './MovieCard';
 import Pagination from './Pagination';
 
@@ -45,6 +46,8 @@ const Movies = () => {
     ]);
     const[pageNo, setPageNo] = useState(1);
 
+    const[watchlist, setWatchlist] = useState([]);
+
     const handleNext = () =>{
         setPageNo(pageNo+1);
     }
@@ -54,6 +57,28 @@ const Movies = () => {
         setPageNo(pageNo-1);
         }
     };
+
+    const addtoWatchlist = (movieObj) => {
+        let updatedWatchList = [...watchlist, movieObj]
+        setWatchlist(updatedWatchlist);
+    }
+
+    const removefromWatchlist = (movieObj) =>{
+        let filteredMovies = watchlist.filter((movie)=>{
+           return movie.id != movieObj.id;
+        })
+        setWatchlist(filteredMovies);
+    }
+
+    useEffect(() => {
+         axios.get(
+          `https://api.themoviedb.org/3/trending/movie/day?api_key=7f47f3dd03ccf3376d65900ffc9403b8&language=en-US&page=${pageNo}`
+        ).then(function  (res) {
+          console.log(res.data.results);
+          setMovies(res.data.results);
+          
+        });
+      }, [pageNo]); 
 
   return ( 
     <div className = "min-h-screen">
