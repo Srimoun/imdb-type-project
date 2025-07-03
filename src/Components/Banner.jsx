@@ -13,7 +13,10 @@ const Banner = () => {
       const movie = res.data.results[0];
       setBannerImage(`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`);
       setTitle(movie.original_title);
-    });
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   }); 
 
   return (
