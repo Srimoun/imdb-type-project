@@ -59,8 +59,10 @@ const Movies = () => {
     };
 
     const addtoWatchlist = (movieObj) => {
+        console.log(movieObj);
         let updatedWatchList = [...watchlist, movieObj]
-        setWatchlist(updatedWatchlist);
+        setWatchlist(updatedWatchList);
+        localStorage.setItem("watchList", JSON.stringify(updatedWatchList));
     }
 
     const removefromWatchlist = (movieObj) =>{
@@ -68,6 +70,7 @@ const Movies = () => {
            return movie.id != movieObj.id;
         })
         setWatchlist(filteredMovies);
+         localStorage.setItem("watchList", JSON.stringify(filteredMovies));
     }
 
     useEffect(() => {
@@ -80,6 +83,18 @@ const Movies = () => {
         });
       }, [pageNo]); 
 
+    useEffect(() => {
+            let moviesfromlocalstorage = localStorage.getItem("watchList");
+      
+             if ( !moviesfromlocalstorage) {
+                return;
+             }
+      
+             setWatchlist(JSON.parse(moviesfromlocalstorage));
+             console.log(watchlist);
+            
+    }, []);
+
   return ( 
     <div className = "min-h-screen">
     <div className="text-4xl font-bold text-center m-5"> Trending Movies</div>
@@ -87,7 +102,7 @@ const Movies = () => {
      <div className = "flex justify-evenly gap-8 flex-wrap">
      {movies.map((movie, i) =>{
     return (
-       <MovieCard key = {i} movieObj = {movie}/>
+       <MovieCard key = {i} movieObj = {movie} addtoWatchlist={ addtoWatchlist } removefromWatchlist={removefromWatchlist} watchlist={watchlist}/>
     )
    })}
      </div>
